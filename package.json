@@ -1,11 +1,8 @@
 {
+  "homepage": "https//nuraalamjikue.github.io/ReactJsWithAdminPanel",
   "name": "@coreui/coreui-free-react-admin-template",
   "version": "5.0.0-rc.0",
   "description": "CoreUI Free React Admin Template",
-  "homepage": ".",
-  "bugs": {
-    "url": "https://github.com/coreui/coreui-free-react-admin-template/issues"
-  },
   "repository": {
     "type": "git",
     "url": "git@github.com:coreui/coreui-free-react-admin-template.git"
@@ -14,6 +11,8 @@
   "author": "The CoreUI Team (https://github.com/orgs/coreui/people)",
   "scripts": {
     "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "lint": "eslint \"src/**/*.js\"",
     "serve": "vite preview",
     "start": "vite"
