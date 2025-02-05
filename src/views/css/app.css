@@ -1,0 +1,15 @@
+@font-face {
+  font-family: PTS-Regular;
+  src: url(../src/assets/fonts/PTSans-Regular.ttf);
+}
+.PTSRegular {
+  font-family: PTS-Regular;
+}
+
+@font-face {
+  font-family: Roboto-Bold;
+  src: url(../src/assets/fonts/Roboto-Bold.ttf);
+}
+.Roboto-Bold {
+  font-family: Roboto-Bold;
+}

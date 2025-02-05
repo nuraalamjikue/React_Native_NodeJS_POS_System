@@ -1,5 +1,8 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+
+
+
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   CButton,
   CCard,
@@ -12,11 +15,70 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+  CAlert,
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilLockLocked, cilUser } from '@coreui/icons';
+import instance from '../../../axios/axiosInstance';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  // const handleLogin = async (e) => {
+  //   e.preventDefault(); // Prevent default form submission behavior
+  //   setError('');
+
+  //   try {
+  //     const response = await instance.post('/login', { username, password });
+  //     const { token } = response.data;
+  //     console.log('Token: ' + JSON.stringify(response.data, null, 2));
+
+  //     let role = 'admin';
+  //     // Save token securely
+  //     localStorage.setItem('authToken', token);
+  //     localStorage.setItem("roleId", role);
+
+
+  //     // Redirect to dashboard
+  //     navigate('/dashboard');
+  //   } catch (err) {
+  //     console.error('Login error:', err);
+  //     setError('Invalid username or password');
+  //   }
+  // };
+
+
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    setError('');
+    localStorage.removeItem('roleId')
+    try {
+      const response = await instance.post('/login', { username, password });
+      const { token, roleId } = response.data;
+      console.log('Token:', token);
+
+
+      let role = roleId === 0 ? 'admin' : 'user';
+
+      // let role = 'user';
+      console.log('RoleID:', role);
+      // Save token and RoleID securely
+      localStorage.setItem('authToken', token);
+      localStorage.setItem("roleId", role);
+
+
+      // Redirect to dashboard
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Invalid username or password');
+    }
+  };
+
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -25,14 +87,21 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={handleLogin}>
+                    {error && <CAlert color="danger">{error}</CAlert>}
                     <h1>Login</h1>
-                    <p className="text-body-secondary">Sign In to your account</p>
+                    <p className="text-body-secondary">Sign in to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,11 +111,14 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton type="submit" color="primary" className="px-4">
                           Login
                         </CButton>
                       </CCol>
@@ -64,8 +136,7 @@ const Login = () => {
                   <div>
                     <h2>Sign up</h2>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
+                      Create a new account to access exclusive features and manage your dashboard.
                     </p>
                     <Link to="/register">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>
@@ -80,7 +151,7 @@ const Login = () => {
         </CRow>
       </CContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
